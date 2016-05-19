@@ -104,7 +104,7 @@ d3.csv("../data/globalTemperature.csv", function(error,data) {
 	/*point attributes*/
 	points.attr('cy', 0)
 			.transition()
-			.duration(100)
+			.duration(1000)
 			.delay((d, i) => (i * 10))
 			.ease('elastic')
 			.attr({
