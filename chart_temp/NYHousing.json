@@ -1,0 +1,306 @@
+{
+  "1974": {
+    "New York City": 20500,
+    "Bronx": 20000,
+    "Brooklyn": 19000,
+    "Manhattan": 20000,
+    "Queens": 22500,
+    "Staten Island": 24125
+  },
+  "1975": {
+    "New York City": 20750,
+    "Bronx": 20000,
+    "Brooklyn": 19250,
+    "Manhattan": 14025,
+    "Queens": 22500,
+    "Staten Island": 24874
+  },
+  "1976": {
+    "New York City": 22000,
+    "Bronx": 22000,
+    "Brooklyn": 20000,
+    "Manhattan": 17500,
+    "Queens": 23250,
+    "Staten Island": 27900
+  },
+  "1977": {
+    "New York City": 23000,
+    "Bronx": 23250,
+    "Brooklyn": 22000,
+    "Manhattan": 25000,
+    "Queens": 24000,
+    "Staten Island": 28000
+  },
+  "1978": {
+    "New York City": 24500,
+    "Bronx": 24500,
+    "Brooklyn": 23000,
+    "Manhattan": 30956,
+    "Queens": 25000,
+    "Staten Island": 31250
+  },
+  "1979": {
+    "New York City": 26000,
+    "Bronx": 26250,
+    "Brooklyn": 24500,
+    "Manhattan": 32188,
+    "Queens": 26500,
+    "Staten Island": 32500
+  },
+  "1980": {
+    "New York City": 27000,
+    "Bronx": 26500,
+    "Brooklyn": 25625,
+    "Manhattan": 31875,
+    "Queens": 27500,
+    "Staten Island": 32500
+  },
+  "1981": {
+    "New York City": 29500,
+    "Bronx": 28500,
+    "Brooklyn": 28250,
+    "Manhattan": 74500,
+    "Queens": 30000,
+    "Staten Island": 33250
+  },
+  "1982": {
+    "New York City": 32500,
+    "Bronx": 28750,
+    "Brooklyn": 31500,
+    "Manhattan": 97183,
+    "Queens": 33750,
+    "Staten Island": 35310
+  },
+  "1983": {
+    "New York City": 38000,
+    "Bronx": 33875,
+    "Brooklyn": 37250,
+    "Manhattan": 145000,
+    "Queens": 39750,
+    "Staten Island": 47500
+  },
+  "1984": {
+    "New York City": 45000,
+    "Bronx": 37000,
+    "Brooklyn": 45000,
+    "Manhattan": 136938,
+    "Queens": 47500,
+    "Staten Island": 57500
+  },
+  "1985": {
+    "New York City": 62500,
+    "Bronx": 43500,
+    "Brooklyn": 58500,
+    "Manhattan": 202708,
+    "Queens": 70000,
+    "Staten Island": 70000
+  },
+  "1986": {
+    "New York City": 82000,
+    "Bronx": 58333,
+    "Brooklyn": 75000,
+    "Manhattan": 224750,
+    "Queens": 92000,
+    "Staten Island": 87500
+  },
+  "1987": {
+    "New York City": 92500,
+    "Bronx": 73500,
+    "Brooklyn": 87500,
+    "Manhattan": 270000,
+    "Queens": 102500,
+    "Staten Island": 102500
+  },
+  "1988": {
+    "New York City": 100000,
+    "Bronx": 87500,
+    "Brooklyn": 92500,
+    "Manhattan": 190000,
+    "Queens": 110000,
+    "Staten Island": 115000
+  },
+  "1989": {
+    "New York City": 102500,
+    "Bronx": 92500,
+    "Brooklyn": 97500,
+    "Manhattan": 245833,
+    "Queens": 109500,
+    "Staten Island": 112125
+  },
+  "1990": {
+    "New York City": 101250,
+    "Bronx": 94000,
+    "Brooklyn": 95000,
+    "Manhattan": 260500,
+    "Queens": 109000,
+    "Staten Island": 110000
+  },
+  "1991": {
+    "New York City": 96500,
+    "Bronx": 89950,
+    "Brooklyn": 95000,
+    "Manhattan": 272500,
+    "Queens": 100000,
+    "Staten Island": 110000
+  },
+  "1992": {
+    "New York City": 92500,
+    "Bronx": 85000,
+    "Brooklyn": 91500,
+    "Manhattan": 162333,
+    "Queens": 92500,
+    "Staten Island": 105000
+  },
+  "1993": {
+    "New York City": 90000,
+    "Bronx": 85000,
+    "Brooklyn": 90000,
+    "Manhattan": 257500,
+    "Queens": 90000,
+    "Staten Island": 102500
+  },
+  "1994": {
+    "New York City": 92500,
+    "Bronx": 89000,
+    "Brooklyn": 91667,
+    "Manhattan": 245833,
+    "Queens": 92500,
+    "Staten Island": 103970
+  },
+  "1995": {
+    "New York City": 92500,
+    "Bronx": 84500,
+    "Brooklyn": 92500,
+    "Manhattan": 316667,
+    "Queens": 92500,
+    "Staten Island": 105000
+  },
+  "1996": {
+    "New York City": 92500,
+    "Bronx": 87500,
+    "Brooklyn": 90000,
+    "Manhattan": 315396,
+    "Queens": 94500,
+    "Staten Island": 105000
+  },
+  "1997": {
+    "New York City": 95500,
+    "Bronx": 88500,
+    "Brooklyn": 93000,
+    "Manhattan": 225000,
+    "Queens": 99000,
+    "Staten Island": 111000
+  },
+  "1998": {
+    "New York City": 100000,
+    "Bronx": 92500,
+    "Brooklyn": 97500,
+    "Manhattan": 187500,
+    "Queens": 105000,
+    "Staten Island": 111490
+  },
+  "1999": {
+    "New York City": 110000,
+    "Bronx": 100000,
+    "Brooklyn": 110000,
+    "Manhattan": 125221,
+    "Queens": 112500,
+    "Staten Island": 122400
+  },
+  "2000": {
+    "New York City": 123333,
+    "Bronx": 110000,
+    "Brooklyn": 117700,
+    "Manhattan": 265000,
+    "Queens": 129000,
+    "Staten Island": 135826
+  },
+  "2001": {
+    "New York City": 136000,
+    "Bronx": 118541,
+    "Brooklyn": 131700,
+    "Manhattan": 138006,
+    "Queens": 144000,
+    "Staten Island": 156582
+  },
+  "2002": {
+    "New York City": 147500,
+    "Bronx": 125000,
+    "Brooklyn": 140000,
+    "Manhattan": 168111,
+    "Queens": 161500,
+    "Staten Island": 172355
+  },
+  "2003": {
+    "New York City": 178750,
+    "Bronx": 146667,
+    "Brooklyn": 172713,
+    "Manhattan": 225000,
+    "Queens": 195983,
+    "Staten Island": 187500
+  },
+  "2004": {
+    "New York City": 207500,
+    "Bronx": 170000,
+    "Brooklyn": 204150,
+    "Manhattan": 312500,
+    "Queens": 226000,
+    "Staten Island": 212500
+  },
+  "2005": {
+    "New York City": 240000,
+    "Bronx": 196667,
+    "Brooklyn": 235500,
+    "Manhattan": 408750,
+    "Queens": 265000,
+    "Staten Island": 247500
+  },
+  "2006": {
+    "New York City": 267500,
+    "Bronx": 225000,
+    "Brooklyn": 265000,
+    "Manhattan": 500000,
+    "Queens": 292500,
+    "Staten Island": 250000
+  },
+  "2007": {
+    "New York City": 277500,
+    "Bronx": 232048,
+    "Brooklyn": 279524,
+    "Manhattan": 650000,
+    "Queens": 298700,
+    "Staten Island": 255000
+  },
+  "2008": {
+    "New York City": 257500,
+    "Bronx": 215000,
+    "Brooklyn": 266708,
+    "Manhattan": 955000,
+    "Queens": 268750,
+    "Staten Island": 240357
+  },
+  "2009": {
+    "New York City": 225000,
+    "Bronx": 192500,
+    "Brooklyn": 238417,
+    "Manhattan": 558333,
+    "Queens": 230000,
+    "Staten Island": 225000
+  },
+  "2010": {
+    "New York City": 220000,
+    "Bronx": 184667,
+    "Brooklyn": 239475,
+    "Manhattan": 743750,
+    "Queens": 218333,
+    "Staten Island": 0
+  },
+  "2011": {
+    "New York City": 214125,
+    "Bronx": 170000,
+    "Brooklyn": 233333,
+    "Manhattan": 445397,
+    "Queens": 212845,
+    "Staten Island": 0
+  }
+}

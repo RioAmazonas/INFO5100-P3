@@ -1,0 +1,68 @@
+
+<html>
+<head>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/topojson.v1.min.js"></script>
+<style>
+svg {
+  border:1px solid black;
+}
+</style>
+
+</head>
+<body>
+
+<div id = chart1>graph file</div>
+
+
+
+<script>
+
+
+d3.json("NYHousing.json", function(data1) {
+	d3.json("NYFelonies.json", function(data2) {
+
+
+		var width = 960,
+	    	height = 600;
+		var padding = 50;
+
+		var svg = d3.select("#chart1").append("svg")
+	    	.attr("width", width)
+	    	.attr("height", height);
+
+		console.log(data1);	    
+
+	    var xDomain = [0, d3.max(stateFeatures, function (d) { return Math.log(stateGuns[d.id].density); })];
+		var yDomain = [0, d3.max(stateFeatures, function (d) { return stateGuns[d.id].ownership; })];
+
+		var xScale = d3.scale.linear().domain(xDomain).range([padding, width - padding]);
+		var yScale = d3.scale.linear().domain(yDomain).range([height - padding, padding]);
+
+		var xAxis = d3.svg.axis().scale(xScale);
+		svg.append("g")
+		  .attr("class", "axis")
+		  .attr("transform", "translate(0, " + (height - padding) + ")")
+		  .call(xAxis);
+
+		var yAxis = d3.svg.axis().scale(yScale).orient("left");
+		svg.append("g")
+			.attr("class", "axis")
+			.attr("transform", "translate(" + padding + ", 0)")
+			.call(yAxis);
+
+
+
+
+
+
+	});
+});
+
+
+
+
+</script>
+
+</body>
+</html>
