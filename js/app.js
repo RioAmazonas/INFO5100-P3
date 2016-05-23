@@ -1,170 +1,293 @@
-window.onerror = function(errorMsg, url, lineNumber) {
-	alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
-}
-var w = $(window).width() * 0.8,
-		h = window.screen.height * 0.5,
-		padding = 25,
-		dataset = [];
-		// dataset = [
-		// 		[10, 10],
-		// 		[20, 50],
-		// 		[30, 40],
-		// 		[40, 80],
-		// 		[50, 90],
-		// 		[60, 50],
-		// 		[70, 70],
-		// 		[80, 60],
-		// 		[90, 10],
-		// 		[100, 50],
-		// 		[110, 40],
-		// 		[120, 70],
-		// 		[130, 20],
-		// 		[140, 40],
-		// 		[150, 30]
-		// ]
+var apiKey, map, geojsonLayer;
+var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+var ready = false;
+var NYCgeojson;
 
-d3.csv("../data/globalTemperature.csv", function(error,data) {
-	for(var i =0; i < data.length; i++) {
-		dataset.push([Number(data[i]["Year"]) , Number(data[i]["Annual_Mean"]) ]);
-	}
-	console.log("Dataset is: ");
-	console.log(dataset);
-	var xScale = d3.scale.linear()
-		.domain([1880, 2013])
-		.range([padding, w - padding]);
+var variables = [];
 
-	/*y scale*/
-	var yScale = d3.scale.linear()
-			.domain([d3.min(dataset, d => d[1]), d3.max(dataset, d => d[1])])
-			.range([h - padding, padding]);
+var boroughs = {
+    "Staten Island": 0,
+    "Queens": 1,
+    "Brooklyn": 2,
+    "Manhattan": 3,
+    "Bronx": 4
+};
 
-	/*x axis*/
-	var xAxis = d3.svg.axis()
-			.scale(xScale)
-			.tickValues(xScale.domain())
-			.tickFormat(d3.format("d"))
-			.orient('bottom');
+var currentBorough = 0;
 
-	/*append x axis*/
-	svg.append('g')
-			.attr({
-					'class': 'xaxis',
-					'transform': 'translate(0, '+(h - padding)+')'
-			})
-			.call(xAxis)
+var text;
 
-	/*y axis*/
-	var yAxis = d3.svg.axis()
-			.scale(yScale)
-			.orient('left')
+jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
+    ready = true;
+    NYCgeojson = response;
 
-	/*append y axis*/
-	svg.append('g')
-			.attr({
-					'class': 'yaxis',
-					'transform': 'translate('+padding+', 0)'
-			})
-			.call(yAxis)
+    NYCgeojson.features[boroughs["Staten Island"]].properties.NAME = "Staten Island";
+    NYCgeojson.features[boroughs["Queens"]].properties.NAME = "Queens";
+    NYCgeojson.features[boroughs["Brooklyn"]].properties.NAME = "Brooklyn";
+    NYCgeojson.features[boroughs["Manhattan"]].properties.NAME = "Manhattan";
+    NYCgeojson.features[boroughs["Bronx"]].properties.NAME = "Bronx";
+});
 
-	/*define line*/
-	var lines = d3.svg.line()
-			.x(d => xScale(d[0]))
-			.y(d => yScale(d[1]))
-			.interpolate('monotone')
+var sdk = new CitySDK();
+var census = sdk.modules.census;
 
-	/*append line*/
-	 // var path = svg.append('path')
-		// 	.attr({
-		// 			'd': lines(dataset),
-		// 			'class': 'lineChart'
-		// 	});
-	// var totalLength = path.node().getTotalLength();
- //    path
- //      .attr("stroke-dasharray", totalLength + " " + totalLength)
- //      .attr("stroke-dashoffset", totalLength)
- //      .transition()
- //        .duration(3000)
- //        .ease("linear")
- //        .attr("stroke-dashoffset", 0);
+var mode = "geometry";
 
-	svg.select('.lineChart')
-			.style('opacity', 0)
-			.transition()
-			.duration(500)
-			.delay(1000)
-			.style('opacity', 1)
+function getApiKey() {
+    apiKey = "b9f91488e2b7f8eb36894b3c3ed7382598e487b4";//prompt("Enter your Census API Key","API Key");
+    census.enable("b9f91488e2b7f8eb36894b3c3ed7382598e487b4");
+};
 
-	/*add points*/
-	var points = svg.selectAll('circle')
-			.data(dataset)
-			.enter()
-			.append('circle')
-			.call(drag)
+$(document).ready(
+        function() {
+            getApiKey();
+            text = document.getElementById("text");
+            map = L.map('map', { zoomControl:false }).setView([40.7127, -74.0059], 10);
 
-	/*point attributes*/
-	points.attr('cy', 0)
-			.transition()
-			.duration(1000)
-			.delay((d, i) => (i * 10))
-			.ease('elastic')
-			.attr({
-					'cx': d => xScale(d[0]),
-					'cy': d => yScale(d[1]),
-					'r': 3,
-					'class': 'datapoint',
-					'id': (d, i) => i
-			})
-			.style('opacity', 1)
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                minZoom: 10,
+                maxZoom: 12,
+                id: ['radhikabk.065mp68i'],
+                accessToken: ['pk.eyJ1IjoicmFkaGlrYWJrIiwiYSI6ImNpb2Y0bTdxOTAwdWh5dm0yc250a2s4MG4ifQ.OXohB9JMXN_liaBsgWaZ6Q']
+            }).addTo(map);
 
-	var xMax = d3.max(dataset, d => d[0]),
-			yMax = d3.max(dataset, d => d[1])
 
-})
+            geojsonLayer = L.geoJson().addTo(map);
 
-/*create svg element*/
-var svg = d3.select('#main-div')
-		.append('svg')
-		.attr('width', w)
-		.attr('height', h)
-		.attr('id', 'chart')
+            L.Util.setOptions(geojsonLayer,
+                {
+                style: {
+                    "clickable": true,
+                    "color": "#ff7800",
+                    "weight": 2,
+                    "opacity": 0.65
+                },
 
-var drag = d3.behavior.drag()
-		.on("dragstart", dragstarted)
-		.on("drag", dragged)
-		.on("dragend", dragended)
+                onEachFeature: function (feature, layer) {
+                    layer.on('click', function (e) {
+                        var popup = "<h4>" + feature.properties.NAME + "</h4>";
+                        variables.forEach(function(v) {
+                            popup += "<br/><strong>" + v + "</strong>: " + feature.properties[v];
+                        });
 
-/*x scale*/
+                        layer.bindPopup(popup);
+                    });
+                }
 
-function dragstarted() {
-		d3.event.sourceEvent.stopPropagation()
-		d3.select(this).classed("dragging datapoint", true)
-}
+                });
+            $('#opener').on('click', function() {       
+                var panel = $('#slide-panel');
+                if (panel.hasClass("visible")) {
+                    panel.removeClass('visible').animate({'margin-left':'-'+0.9*w+'px'});
+                    $('#opener').html('<i class="fa fa-chevron-circle-right fa-2x" aria-hidden="true"></i>');
+                } else {
+                    panel.addClass('visible').animate({'margin-left':'0px'});
+                    setTimeout(function(){
+                        $('#opener').html('<i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>');
+                    },600)
+                    
+                }   
+                return false;   
+            });
+        }
+);
+var q;
+function split(x) {
+    variables = [];
+    $('#variableBox').val().split(",").forEach(function(s) {
+        variables.push(s.trim());
+    });
 
-function dragged() {
-		d3.select(this)
-				.attr({
-						'cx': Math.max(padding, Math.min(d3.event.x, w - padding)),
-						'cy': Math.max(padding, Math.min(d3.event.y, h - padding))
-				})
-}
+    var request = {
+        container: mode,
+        containerGeometry: census.GEOtoESRI(NYCgeojson.features[currentBorough]).geometry,
+        sublevel: true,
+        level: x,
+        variables: variables
+    };
 
-function dragended() {
-		d3.select(this).classed("datapoint", true)
-				// get id of dragged point 		
-		var id = d3.select(this).attr('id'),
-				// get new absolute position coordinates of the point 				
-				xPos = d3.select(this).attr('cx'),
-				yPos = h - d3.select(this).attr('cy')
+    census.GEORequest(request, function(response) {
+        response.features.forEach(function(f) {
+            geojsonLayer.addData(f);
+        });
+    });
+};
 
-		// convert absolute position coordinates relative to scales
-		xPos = (xPos - padding) * (xMax / (w - (padding * 2)))
-		yPos = (yPos - padding) * (yMax / (h - (padding * 2)))
-		dataset[id][0] = xPos
-		dataset[id][1] = yPos
+function clearMap() {
+    geojsonLayer.clearLayers();
+};
 
-		// update line
-		svg.select('.lineChart')
-				.transition()
-				.duration(500)
-				.attr('d', lines(dataset))
-}
+function plotBorough(x) {
+    text.innerHTML = x;
+    if( $('#navbar-header').hasClass('in') ) {
+        $('.navbar-toggler').click();
+    }
+    clearMap();
+    currentBorough = boroughs[x];
+
+    geojsonLayer.addData(NYCgeojson.features[currentBorough]);
+    var bounds = geojsonLayer.getBounds();
+    var center = bounds.getCenter();
+    map.panTo(center)
+};
+
+function setMode(x) {
+    mode = x;
+};
+
+// Draw the line graph in slide panel
+d3.csv("NYSummary.csv", function(error1, data) {
+
+        var width = 600;
+        var height = 300;
+        var padding = 60;
+          
+        var svg = d3.select("#slide-panel")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            // .append("g")
+            //     .attr("transform", 
+            //           "translate(" + padding + "," + padding + ")");
+
+            // .attr("width", '100%')
+            // .attr("height", "100%")
+            // .attr('viewBox','0 0 '+ width +' '+ height)
+            // .attr('preserveAspectRatio','xMinYMin')
+            // // .append("g")
+            // .attr("transform", "translate(" + padding + "," + padding + ")");
+
+        console.log(data);
+        var parseDate = d3.time.format("%d-%b-%y").parse;
+
+        var x = d3.scale.linear().domain([1990, 2007]).range([padding, width - padding]);
+        var y0 = d3.scale.linear().domain([0, 650000]).range([height - padding, padding]);
+        var y1 = d3.scale.linear().domain([0, 750000]).range([height - padding, padding]);
+
+        // Add the X & Y Axis
+        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(5);
+        var yAxisLeft = d3.svg.axis().scale(y0).orient("left").ticks(5);
+        var yAxisRight = d3.svg.axis().scale(y1).orient("right").ticks(5); 
+
+        svg.append("g")            
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (height - padding) + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + (padding) + " ,0)")   
+            .style("fill", "steelblue")
+            .call(yAxisLeft);   
+
+        svg.append("g")             
+            .attr("class", "y axis")    
+            .attr("transform", "translate(" + (width - padding) + " ,0)")   
+            .style("fill", "red")       
+            .call(yAxisRight);
+
+        // draw line of housing rate
+        // NYC
+        var valueline_housing_NYC = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.NYC_housing); });
+        // Bronx
+        var valueline_housing_Bronx = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Bronx_housing); });
+        // Brooklyn
+        var valueline_housing_Brooklyn = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Brooklyn_housing); });
+        // Manhattan
+        var valueline_housing_Manhattan = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Manhattan_housing); });
+        // Queens
+        var valueline_housing_Queens = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Queens_housing); });
+        // Staten
+        var valueline_housing_Staten = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Staten_housing); });
+
+        // draw line of felony rate
+        // NYC
+        var valueline_felony_NYC = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.NYC_felony); });
+        // Bronx
+        var valueline_felony_Bronx = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Bronx_felony); });
+        // Brooklyn
+        var valueline_felony_Brooklyn = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Brooklyn_felony); });
+        // Manhattan
+        var valueline_felony_Manhattan = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Manhattan_felony); });
+        // Queens
+        var valueline_felony_Queens = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Queens_felony); });
+        // Staten
+        var valueline_felony_Staten = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Staten_felony); });
+
+        // add path for housing
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#e6f0ff")
+            .attr("d", valueline_housing_NYC(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#b3d1ff")
+            .attr("d", valueline_housing_Bronx(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#99c2ff")
+            .attr("d", valueline_housing_Brooklyn(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#66a3ff")
+            .attr("d", valueline_housing_Manhattan(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#3385ff")
+            .attr("d", valueline_housing_Queens(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#0066ff")
+            .attr("d", valueline_housing_Staten(data));
+
+        // add path for falony
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#ffc2b3")
+            .attr("d", valueline_felony_NYC(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#ffad99")
+            .attr("d", valueline_felony_Bronx(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#ff8566")
+            .attr("d", valueline_felony_Brooklyn(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#ff5c33")
+            .attr("d", valueline_felony_Manhattan(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#ff3300")
+            .attr("d", valueline_felony_Queens(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#cc2900")
+            .attr("d", valueline_felony_Staten(data));
+
+    
+});
