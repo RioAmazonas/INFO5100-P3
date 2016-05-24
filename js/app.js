@@ -76,7 +76,7 @@ $(document).ready(
                 }
 
                 });
-            $('#opener').on('click', function() {       
+            $('#opener').on('click', function() {     
                 var panel = $('#slide-panel');
                 if (panel.hasClass("visible")) {
                     panel.removeClass('visible').animate({'margin-left':'-'+0.9*w+'px'});
@@ -137,17 +137,14 @@ function setMode(x) {
 };
 
 // Draw the line graph in slide panel
-d3.csv("NYSummary.csv", function(error, data) {
+d3.csv("NYSummary2.csv", function(error, data) {
 
-        var padding = 40;
+
         var $slideContainer = $(".slideContainer"),
             width = $slideContainer.width();
             height = $slideContainer.height();
 
-            console.log("height = " + height);
-            console.log("height - padding = " + (height - padding));
-            console.log("width = " + width);
-            console.log("width - padding = " + (width - padding));
+        var padding = 0.15 * width;
           
         var svg = d3.select(".slideContainer")
             .append("svg")
@@ -159,8 +156,8 @@ d3.csv("NYSummary.csv", function(error, data) {
         var parseDate = d3.time.format("%d-%b-%y").parse;
 
         var x = d3.scale.linear().domain([1990, 2007]).range([padding, width - padding]);
-        var y0 = d3.scale.linear().domain([0, 650000]).range([height - padding, padding]);
-        var y1 = d3.scale.linear().domain([0, 750000]).range([height - padding, padding]);
+        var y0 = d3.scale.linear().domain([0, 650]).range([height - padding, padding]);
+        var y1 = d3.scale.linear().domain([0, 750]).range([height - padding, padding]);
 
         // Add the X & Y Axis
         var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(5);
@@ -184,11 +181,21 @@ d3.csv("NYSummary.csv", function(error, data) {
             .style("fill", "red")       
             .call(yAxisRight);
 
+        svg.append("text")
+            .attr("x", - (height)/ 2 - padding) 
+            .attr("y", padding  - 35)
+            .style("fill", "steelblue")
+            .attr("transform", "rotate(-90)")
+            .text("Housing Rent (1,000 USD)");
+
+        svg.append("text")
+            .attr("x", - (height)/ 2 - padding)
+            .attr("y", (width - padding) + 45)
+            .attr("transform", "rotate(-90)")
+            .style("fill", "red") 
+            .text("Felony (1,000 Cases)");
+
         // draw line of housing rate
-        // NYC
-        var valueline_housing_NYC = d3.svg.line()
-            .x(function(d) { return x(d.date); })
-            .y(function(d) { return y0(d.NYC_housing); });
         // Bronx
         var valueline_housing_Bronx = d3.svg.line()
             .x(function(d) { return x(d.date); })
@@ -211,10 +218,6 @@ d3.csv("NYSummary.csv", function(error, data) {
             .y(function(d) { return y0(d.Staten_housing); });
 
         // draw line of felony rate
-        // NYC
-        var valueline_felony_NYC = d3.svg.line()
-            .x(function(d) { return x(d.date); })
-            .y(function(d) { return y1(d.NYC_felony); });
         // Bronx
         var valueline_felony_Bronx = d3.svg.line()
             .x(function(d) { return x(d.date); })
@@ -237,54 +240,59 @@ d3.csv("NYSummary.csv", function(error, data) {
             .y(function(d) { return y1(d.Staten_felony); });
 
         // add path for housing
-        svg.append("path")        // Add the valueline path.
-            .style("stroke", "#e6f0ff")
-            .attr("d", valueline_housing_NYC(data));
+        var lineOpacity = 0.2;
+        var lineColorHousing = "#ff0000";
+        var lineColorFelony = "#0040ff";
 
         svg.append("path")        // Add the valueline2 path.
-            .style("stroke", "#b3d1ff")
+            .style("stroke", lineColorHousing)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_housing_Bronx(data));
 
         svg.append("path")        // Add the valueline path.
-            .style("stroke", "#99c2ff")
+            .style("stroke", lineColorHousing)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_housing_Brooklyn(data));
 
         svg.append("path")        // Add the valueline2 path.
-            .style("stroke", "#66a3ff")
+            .style("stroke", lineColorHousing)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_housing_Manhattan(data));
 
         svg.append("path")        // Add the valueline path.
-            .style("stroke", "#3385ff")
+            .style("stroke", lineColorHousing)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_housing_Queens(data));
 
         svg.append("path")        // Add the valueline2 path.
-            .style("stroke", "#0066ff")
+            .style("stroke", lineColorHousing)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_housing_Staten(data));
 
         // add path for falony
-        svg.append("path")        // Add the valueline path.
-            .style("stroke", "#ffc2b3")
-            .attr("d", valueline_felony_NYC(data));
-
         svg.append("path")        // Add the valueline2 path.
-            .style("stroke", "#ffad99")
+            .style("stroke", lineColorFelony)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_felony_Bronx(data));
 
         svg.append("path")        // Add the valueline path.
-            .style("stroke", "#ff8566")
+            .style("stroke", lineColorFelony)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_felony_Brooklyn(data));
 
         svg.append("path")        // Add the valueline2 path.
-            .style("stroke", "#ff5c33")
+            .style("stroke", lineColorFelony)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_felony_Manhattan(data));
 
         svg.append("path")        // Add the valueline path.
-            .style("stroke", "#ff3300")
+            .style("stroke", lineColorFelony)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_felony_Queens(data));
 
         svg.append("path")        // Add the valueline2 path.
-            .style("stroke", "#cc2900")
+            .style("stroke", lineColorFelony)
+            .style("opacity", lineOpacity)
             .attr("d", valueline_felony_Staten(data));
 
-    
 });
