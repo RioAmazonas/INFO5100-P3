@@ -1,8 +1,16 @@
+
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+.leaflet-label {
+    pointer-events: auto;
+}
+
 #slide-panel {
 	position: absolute;
 	top: 0%;
     width:90vw;
-    height:100vh;
+    height:93vh;
     padding:10px;
     background:#eee;
     margin-left:-90vw;
@@ -14,9 +22,20 @@
     border-radius:0;
 }
 
+#plottext {
+    padding: 2%;
+}
+#text {
+    margin-left: 3vw;
+    top: 0.5vh;
+    position: relative;
+}
+
 svg {
-/*  border:1px solid black;*/
-    font-size: 0.8em ;
+    position: absolute;
+    left: 50%;
+    top: 24%;
+    -webkit-transform: translateX(-50%);
 }
 
 path { 
@@ -35,4 +54,13 @@ path {
     stroke: grey;
     stroke-width: 1;
     shape-rendering: crispEdges;
+}
+.cell path{
+    stroke : #000;
+}
+#info {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 1em;
 }
